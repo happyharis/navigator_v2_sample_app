@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigator_v2_sample_app/book.dart';
 import 'package:navigator_v2_sample_app/book_page.dart';
 import 'package:navigator_v2_sample_app/fake_widgets.dart';
 
@@ -42,14 +43,14 @@ class HomePage extends StatelessWidget {
               childAspectRatio: 48 / 78,
               shrinkWrap: true,
               crossAxisCount: 2,
-              children: List.generate(6, (index) {
+              children: List.generate(books.length, (index) {
                 return InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return BookPage(id: index);
+                          return BookPage(book: books[index]);
                         },
                       ),
                     );
