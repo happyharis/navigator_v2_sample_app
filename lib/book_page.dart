@@ -2,13 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:navigator_v2_sample_app/book.dart';
 
 class BookPage extends StatelessWidget {
-  final int id;
-  const BookPage({
-    Key key,
-    this.id = 0,
-  }) : super(key: key);
+  final Book book;
+
+  const BookPage({Key key, @required this.book}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,9 +20,9 @@ class BookPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UpperTextSection(),
+            UpperTextSection(book: book),
             SizedBox(height: 30),
-            MidImageSection(id: id),
+            MidImageSection(image: book.image),
             SizedBox(height: 30),
             BottomTextSection(),
           ],
@@ -86,10 +85,10 @@ class BottomTextSection extends StatelessWidget {
 class MidImageSection extends StatelessWidget {
   const MidImageSection({
     Key key,
-    @required this.id,
+    @required this.image,
   }) : super(key: key);
 
-  final int id;
+  final String image;
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +105,7 @@ class MidImageSection extends StatelessWidget {
                 bottomLeft: Radius.circular(20),
               ),
               child: Image.asset(
-                'images/${id + 1}.jpg',
+                image,
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.fitWidth,
               ),
@@ -167,8 +166,10 @@ class MidImageSection extends StatelessWidget {
 }
 
 class UpperTextSection extends StatelessWidget {
+  final Book book;
   const UpperTextSection({
     Key key,
+    @required this.book,
   }) : super(key: key);
 
   @override
@@ -189,7 +190,7 @@ class UpperTextSection extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            'Always forgive your enemies, nothing annoys.',
+            book.title,
             style: GoogleFonts.lora(fontSize: 29, color: Colors.blue.shade900),
           ),
           SizedBox(height: 15),
@@ -198,14 +199,14 @@ class UpperTextSection extends StatelessWidget {
             children: [
               RichText(
                 text: TextSpan(
-                  text: 'Published from ',
+                  text: 'Writtern by ',
                   style: DefaultTextStyle.of(context).style.copyWith(
                         fontWeight: FontWeight.w500,
                         color: Colors.grey,
                       ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: 'iStudio',
+                      text: book.author,
                       style: TextStyle(color: Colors.blue.shade900),
                     ),
                   ],

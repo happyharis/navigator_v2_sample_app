@@ -42,7 +42,10 @@ class _MyAppState extends State<MyApp> {
               onTapped: _handleBookTapped,
             ),
           ),
-          if (_selectedBook != null) MaterialPage(child: BookPage(id: 0)),
+          if (_selectedBook != null)
+            MaterialPage(
+              child: BookPage(book: _selectedBook),
+            ),
         ],
         onPopPage: (route, result) {
           if (!route.didPop(result)) return false;
