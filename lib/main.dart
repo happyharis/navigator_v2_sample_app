@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:navigator_v2_sample_app/book_page.dart';
 
 void main() {
@@ -20,8 +19,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      // home: HomePage(),
-      home: BookPage(),
+      home: HomePage(),
     );
   }
 }
@@ -44,10 +42,22 @@ class HomePage extends StatelessWidget {
               shrinkWrap: true,
               crossAxisCount: 2,
               children: List.generate(6, (index) {
-                return Card(
-                  child: Image.asset(
-                    'images/${index + 1}.jpg',
-                    fit: BoxFit.fill,
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return BookPage(id: index);
+                        },
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: Image.asset(
+                      'images/${index + 1}.jpg',
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 );
               }),
