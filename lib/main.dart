@@ -44,20 +44,21 @@ class HomePage extends StatelessWidget {
               shrinkWrap: true,
               crossAxisCount: 2,
               children: List.generate(books.length, (index) {
+                final book = books[index];
                 return InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return BookPage(book: books[index]);
+                          return BookPage(book: book);
                         },
                       ),
                     );
                   },
                   child: Card(
                     child: Image.asset(
-                      'images/${index + 1}.jpg',
+                      book.image,
                       fit: BoxFit.fill,
                     ),
                   ),
