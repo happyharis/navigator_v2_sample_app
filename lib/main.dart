@@ -20,7 +20,18 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: HomePage(),
+      home: Navigator(
+        pages: [
+          MaterialPage(
+            key: ValueKey('HomePage'),
+            child: HomePage(),
+          )
+        ],
+        onPopPage: (route, result) {
+          print(route.settings.name);
+          return route.didPop(result);
+        },
+      ),
     );
   }
 }
