@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigator_v2_sample_app/book.dart';
 import 'package:navigator_v2_sample_app/book_page.dart';
 import 'package:navigator_v2_sample_app/fake_widgets.dart';
 
@@ -6,7 +7,19 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Book _selectedBook;
+  void _handleBookTapped(Book book) {
+    setState(() {
+      _selectedBook = book;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,12 +37,19 @@ class MyApp extends StatelessWidget {
         pages: [
           MaterialPage(
             key: ValueKey('HomePage'),
-            child: HomePage(),
-          )
+            child: HomePage(
+              books: books,
+              onTapped: _handleBookTapped,
+            ),
+          ),
+          if (_selectedBook != null) MaterialPage(child: BookPage(id: 0)),
         ],
         onPopPage: (route, result) {
-          print(route.settings.name);
-          return route.didPop(result);
+          if (!route.didPop(result)) return false;
+
+          setState(() => _selectedBook = null);
+
+          return true;
         },
       ),
     );
@@ -37,6 +57,11 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  final List<Book> books;
+  final ValueChanged<Book> onTapped;
+  const HomePage({Key key, @required this.books, @required this.onTapped})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,21 +78,13 @@ class HomePage extends StatelessWidget {
               childAspectRatio: 48 / 78,
               shrinkWrap: true,
               crossAxisCount: 2,
-              children: List.generate(6, (index) {
+              children: List.generate(books.length, (index) {
+                final book = books[index];
                 return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return BookPage(id: index);
-                        },
-                      ),
-                    );
-                  },
+                  onTap: () => onTapped(book),
                   child: Card(
                     child: Image.asset(
-                      'images/${index + 1}.jpg',
+                      book.image,
                       fit: BoxFit.fill,
                     ),
                   ),
