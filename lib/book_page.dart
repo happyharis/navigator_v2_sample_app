@@ -204,7 +204,7 @@ class UpperTextSection extends StatelessWidget {
             children: [
               RichText(
                 text: TextSpan(
-                  text: 'Writtern by ',
+                  text: 'Written by ',
                   style: DefaultTextStyle.of(context).style.copyWith(
                         fontWeight: FontWeight.w500,
                         color: Colors.grey,
