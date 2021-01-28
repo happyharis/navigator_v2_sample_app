@@ -2,7 +2,6 @@ import 'package:beamer/beamer.dart';
 
 import 'book.dart';
 import 'book_page.dart';
-import 'book_page.dart';
 import 'main.dart';
 
 class HomeLocation extends BeamLocation {
