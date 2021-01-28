@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:flutter/material.dart';
 
 import 'book.dart';
 import 'book_page.dart';
@@ -13,7 +14,7 @@ class HomeLocation extends BeamLocation {
 }
 
 class BooksLocation extends BeamLocation {
-  // BooksLocation() : super();
+  BooksLocation() : super();
 
   BooksLocation.withParameters({
     Map<String, String> path,
@@ -23,15 +24,18 @@ class BooksLocation extends BeamLocation {
   @override
   List<BeamPage> get pages {
     return [
+      // Represents a stack of pages
+      // Effect: Add the back button for book page
       HomePage.beamLocation,
       if (pathParameters.containsKey('id'))
         BeamPage(
           page: BookPage(
+            key: ValueKey('book-${pathParameters['id']}'),
             book: books.firstWhere((book) {
-              return book.author == pathParameters['id'];
+              return book.id.toString() == pathParameters['id'];
             }),
           ),
-        )
+        ),
     ];
   }
 

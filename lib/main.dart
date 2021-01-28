@@ -1,30 +1,33 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:navigator_v2_sample_app/beam_locations.dart';
 import 'package:navigator_v2_sample_app/book.dart';
-import 'package:navigator_v2_sample_app/book_page.dart';
+// import 'package:navigator_v2_sample_app/book_page.dart';
 import 'package:navigator_v2_sample_app/fake_widgets.dart';
 
-import 'beamer_example.dart';
-
 void main() {
-  runApp(BeamerApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(
-          color: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
-          elevation: 0,
+    return Beamer(
+      initialLocation: HomeLocation(),
+      beamLocations: [HomeLocation(), BooksLocation()],
+      app: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          appBarTheme: AppBarTheme(
+            color: Colors.white,
+            iconTheme: IconThemeData(color: Colors.black),
+            elevation: 0,
+          ),
         ),
+        // home: HomePage(),
       ),
-      home: HomePage(),
     );
   }
 }
@@ -66,14 +69,9 @@ class BooksGridView extends StatelessWidget {
           final book = books[index];
           return InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return BookPage(book: book);
-                  },
-                ),
-              );
+              Beamer.of(context).beamTo(BooksLocation.withParameters(path: {
+                'id': book.id.toString(),
+              }));
             },
             child: Card(
               child: Image.asset(
