@@ -3,8 +3,10 @@ import 'package:navigator_v2_sample_app/book.dart';
 import 'package:navigator_v2_sample_app/book_page.dart';
 import 'package:navigator_v2_sample_app/fake_widgets.dart';
 
+import 'beamer_example.dart';
+
 void main() {
-  runApp(MyApp());
+  runApp(BeamerApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -38,35 +40,46 @@ class HomePage extends StatelessWidget {
           SizedBox(height: 20),
           FakeTabBar(),
           SizedBox(height: 20),
-          Expanded(
-            child: GridView.count(
-              childAspectRatio: 48 / 78,
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              children: List.generate(books.length, (index) {
-                final book = books[index];
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return BookPage(book: book);
-                        },
-                      ),
-                    );
-                  },
-                  child: Card(
-                    child: Image.asset(
-                      book.image,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                );
-              }),
-            ),
-          )
+          BooksGridView()
         ]),
+      ),
+    );
+  }
+}
+
+class BooksGridView extends StatelessWidget {
+  const BooksGridView({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GridView.count(
+        childAspectRatio: 48 / 78,
+        shrinkWrap: true,
+        crossAxisCount: 2,
+        children: List.generate(books.length, (index) {
+          final book = books[index];
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return BookPage(book: book);
+                  },
+                ),
+              );
+            },
+            child: Card(
+              child: Image.asset(
+                book.image,
+                fit: BoxFit.fill,
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
