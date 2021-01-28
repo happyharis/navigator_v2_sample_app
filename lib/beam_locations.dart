@@ -29,8 +29,8 @@ class BooksLocation extends BeamLocation {
       HomePage.beamLocation,
       if (pathParameters.containsKey('id'))
         BeamPage(
+          key: ValueKey('book-${pathParameters['id']}'),
           page: BookPage(
-            key: ValueKey('book-${pathParameters['id']}'),
             book: books.firstWhere((book) {
               return book.id.toString() == pathParameters['id'];
             }),
