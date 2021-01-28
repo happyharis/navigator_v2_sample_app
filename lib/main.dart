@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:navigator_v2_sample_app/book.dart';
 import 'package:navigator_v2_sample_app/book_page.dart';
@@ -29,6 +30,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  static final beamLocation = BeamPage(key: ValueKey('home'), page: HomePage());
+  static final path = '/';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
