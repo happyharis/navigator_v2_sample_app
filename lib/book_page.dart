@@ -118,13 +118,14 @@ class MidImageSection extends StatelessWidget {
               child: Row(
                 children: [
                   Spacer(),
-                  FlatButton(
-                    height: 50,
-                    minWidth: 50,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      minimumSize: Size(50, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      backgroundColor: Colors.deepOrange,
                     ),
-                    color: Colors.deepOrange,
                     child: Icon(
                       Icons.info_outline,
                       color: Colors.white,
@@ -134,12 +135,15 @@ class MidImageSection extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  FlatButton.icon(
-                    height: 50,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  TextButton.icon(
+                    style: TextButton.styleFrom(
+                      minimumSize: Size(50, 50),
+                      padding: EdgeInsets.all(15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      backgroundColor: Colors.blue.shade900,
                     ),
-                    color: Colors.blue.shade900,
                     icon: Icon(
                       Icons.play_arrow_outlined,
                       color: Colors.white,
