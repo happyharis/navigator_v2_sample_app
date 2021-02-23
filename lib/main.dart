@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:navigator_v2_sample_app/book.dart';
 import 'package:navigator_v2_sample_app/book_page.dart';
 import 'package:navigator_v2_sample_app/fake_widgets.dart';
+import 'package:vrouter/vrouter.dart';
+
+import 'book_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,8 +13,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return VRouter(
+      title: 'VRouter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -21,7 +24,19 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: HomePage(),
+      routes: [
+        VStacked(
+          path: '/',
+          widget: HomePage(),
+        ),
+        VStacked(
+          path: '/book/:id',
+          name: 'book',
+          widget: BookPage(),
+          aliases: ['/book'],
+        ),
+        VRouteRedirector(path: ':_(.*)', redirectTo: '/')
+      ],
     );
   }
 }
@@ -47,13 +62,9 @@ class HomePage extends StatelessWidget {
                 final book = books[index];
                 return InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return BookPage(book: book);
-                        },
-                      ),
+                    VRouterData.of(context).pushNamed(
+                      'book',
+                      pathParameters: {'id': '$index'},
                     );
                   },
                   child: Card(

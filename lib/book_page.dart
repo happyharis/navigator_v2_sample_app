@@ -3,13 +3,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:navigator_v2_sample_app/book.dart';
+import 'package:vrouter/vrouter.dart';
 
 class BookPage extends StatelessWidget {
-  final Book book;
-
-  const BookPage({Key key, @required this.book}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final bookId =
+        int.tryParse(VRouteElementData.of(context).pathParameters['id'] ?? '0');
+    final book = books.elementAt(bookId);
     return Scaffold(
       appBar: AppBar(
         actions: [
