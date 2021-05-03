@@ -5,8 +5,8 @@ import 'package:navigator_v2_sample_app/fake_widgets.dart';
 class HomePage extends StatelessWidget {
   final List<Book> books;
   final ValueChanged<Book> onTapped;
-  const HomePage({Key key, @required this.books, @required this.onTapped})
-      : super(key: key);
+  final onTapAB;
+  const HomePage({Key key, @required this.books, @required this.onTapped, @required this.onTapAB}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +16,16 @@ class HomePage extends StatelessWidget {
         child: Column(children: [
           SizedBox(height: 20),
           FakeAppBar(),
+          GestureDetector(
+            onTap: () {
+              print("jeere");
+              onTapAB();
+            },
+            child: Container(
+              padding: EdgeInsets.all(4),
+              child: Center(child: buildText('Select Custom Audiobooks')),
+            ),
+          ),
           SizedBox(height: 20),
           FakeTabBar(),
           SizedBox(height: 20),

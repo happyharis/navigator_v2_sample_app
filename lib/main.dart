@@ -4,6 +4,8 @@ import 'package:navigator_v2_sample_app/book_page.dart';
 import 'package:navigator_v2_sample_app/book_route_path.dart';
 import 'package:navigator_v2_sample_app/home_page.dart';
 
+import 'audiobook.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -38,16 +40,23 @@ class _MyAppState extends State<MyApp> {
 // Add ChangeNotifier to handle the add and remove listeners of book router
 // delegate. Add pop navigator router delegate mixin to handle the pop route to the
 // navigator it builds.
-class BookRouterDelegate extends RouterDelegate<BookRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<BookRoutePath> {
+class BookRouterDelegate extends RouterDelegate<BookRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<BookRoutePath> {
   final GlobalKey<NavigatorState> navigatorKey;
   BookRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
   Book _selectedBook;
+  String tab = 'books';
   bool show404 = false;
 
   void _handleBookTapped(Book book) {
     _selectedBook = book;
+    notifyListeners();
+  }
+
+  void selectedAudioPage() {
+    _selectedBook = null;
+    print("here-0---");
+    tab = 'audiobooks';
     notifyListeners();
   }
 
@@ -56,13 +65,16 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   BookRoutePath get currentConfiguration {
     if (show404) return BookRoutePath.unknown();
 
-    if (_selectedBook == null) return BookRoutePath.home();
-
-    return BookRoutePath.details(books.indexOf(_selectedBook));
+    if (tab == 'books') {
+      if (_selectedBook == null) {
+        return BookRoutePath.home();
+      } else {
+        return BookRoutePath.details(books.indexOf(_selectedBook));
+      }
+    } else {
+      return BookRoutePath.audioBooks();
+    }
   }
-
-  // @override
-  // GlobalKey<NavigatorState> get navigatorKey => GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +86,13 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
           child: HomePage(
             books: books,
             onTapped: _handleBookTapped,
+            onTapAB: selectedAudioPage,
           ),
         ),
         if (show404)
           MaterialPage(key: ValueKey('UnknownPage'), child: UnknownScreen())
+        else if (tab == 'audiobooks')
+          AudioBookPage()
         else if (_selectedBook != null)
           BookDetailsPage(book: _selectedBook),
       ],
@@ -86,8 +101,16 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
           return false;
         }
 
-        _selectedBook = null;
-        show404 = false;
+        if (tab == 'audiobooks') {
+          tab = 'books';
+          _selectedBook = null;
+          show404 = false;
+        } else {
+          // if tab is on books segment
+          _selectedBook = null;
+          show404 = false;
+        }
+
         notifyListeners();
 
         return true;
@@ -104,7 +127,14 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
       // have an empty return to end the function
       return;
     }
-
+    if (path.isAudioBookPage) {
+      _selectedBook = null;
+      show404 = false;
+      tab = 'audiobooks';
+      return;
+    } else {
+      tab = 'books';
+    }
     if (path.isDetailsPage) {
       if (path.id < 0 || path.id > books.length - 1) {
         show404 = true;
@@ -136,20 +166,37 @@ class BookDetailsPage extends Page {
   }
 }
 
+class AudioBookPage extends Page {
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (BuildContext context) {
+        return AudioBook();
+      },
+    );
+  }
+}
+
 class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
   // Converts the given route information into parsed data to pass to a
   // RouterDelegate
   @override
-  Future<BookRoutePath> parseRouteInformation(
-      RouteInformation routeInfo) async {
+  Future<BookRoutePath> parseRouteInformation(RouteInformation routeInfo) async {
     final uri = Uri.parse(routeInfo.location);
 
     // Handle '/'
     if (uri.pathSegments.length == 0) return BookRoutePath.home();
 
+    // Handle '/audiobooks'
+    if (uri.pathSegments.length == 1 && uri.pathSegments.first == 'audiobooks') {
+      return BookRoutePath.audioBooks();
+    }
+
     // Handle 'book/:id'
     if (uri.pathSegments.length == 2) {
+      // if (uri.pathSegments.first != 'book') return BookRoutePath.unknown();
       if (uri.pathSegments.first != 'book') return BookRoutePath.unknown();
+
       final remaining = uri.pathSegments.elementAt(1);
       final id = int.tryParse(remaining);
       if (id == null) return BookRoutePath.unknown();
@@ -170,6 +217,9 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
     }
     if (path.isHomePage) {
       return RouteInformation(location: '/');
+    }
+    if (path.isAudioBookPage) {
+      return RouteInformation(location: '/audiobooks');
     }
     if (path.isDetailsPage) {
       return RouteInformation(location: '/book/${path.id}');
