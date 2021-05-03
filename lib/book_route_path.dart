@@ -1,18 +1,28 @@
 class BookRoutePath {
+  final String tab;
   final int id;
   final bool isUnknown;
 
   BookRoutePath.home()
-      : id = null,
+      : tab = 'books',
+        id = null,
         isUnknown = false;
 
-  BookRoutePath.details(this.id) : isUnknown = false;
+  BookRoutePath.details(this.id)
+      : tab = 'books',
+        isUnknown = false;
+
+  BookRoutePath.audioBooks()
+      : tab = 'audiobooks',
+        id = null,
+        isUnknown = false;
 
   BookRoutePath.unknown()
-      : id = null,
+      : tab = null,
+        id = null,
         isUnknown = true;
 
-  bool get isHomePage => id == null;
-
+  bool get isHomePage => tab == 'books' && id == null;
+  bool get isAudioBookPage => tab == 'audiobooks';
   bool get isDetailsPage => id != null;
 }
